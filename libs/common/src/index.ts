@@ -9,3 +9,6 @@ export * from './interfaces';
 
 // Utils
 export * from './utils';
+
+// Dto
+export * from './constants';

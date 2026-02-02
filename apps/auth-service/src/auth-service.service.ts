@@ -1,25 +1,91 @@
+import { DatabaseService, users } from '@app/database';
 import { KAFKA_SERVICE, KAFKA_TOPICS } from '@app/kafka';
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  OnModuleInit,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { ClientKafka } from '@nestjs/microservices';
+import { eq } from 'drizzle-orm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthServiceService implements OnModuleInit {
   constructor(
     @Inject(KAFKA_SERVICE) private readonly kafkaClient: ClientKafka,
+    private readonly dbService: DatabaseService,
+    private readonly jwtService: JwtService,
   ) {}
 
+  // Connect to Kafka when the module is initialized.
+  // NOTE: We only call connect() here, NOT subscribeToResponseOf().
+  // subscribeToResponseOf is for request-response (send/reply) pattern.
+  // We use fire-and-forget (emit), so no reply topic is needed.
   async onModuleInit() {
-    this.kafkaClient.subscribeToResponseOf(KAFKA_TOPICS.USER_REGISTERED);
-    // Connect to Kafka when the module is initialized
     await this.kafkaClient.connect();
   }
 
-  simulateUserRegistration(email: string) {
+  async register(email: string, name: string, password: string) {
+    // Check email existed
+    const existingUsing = await this.dbService.db
+      .select()
+      .from(users)
+      .where(eq(users.email, email))
+      .limit(1);
+
+    if (!existingUsing) {
+      throw new ConflictException('User already existed!');
+    }
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user
+    const [user] = await this.dbService.db
+      .insert(users)
+      .values({ email, name, password: hashedPassword })
+      .returning();
+
+    // Send a message to kafka
+
     this.kafkaClient.emit(KAFKA_TOPICS.USER_REGISTERED, {
-      email,
-      timeStamp: new Date().toISOString(),
+      userId: user.id,
+      email: user.email,
+      timestamp: new Date().toISOString(),
     });
 
-    return { message: 'User registration simulated', email };
+    return { message: 'User registered successfully!' };
+  }
+
+  async login(email: string, password: string) {
+    // Check user exited
+    const [user] = await this.dbService.db
+      .select()
+      .from(users)
+      .where(eq(users.email, email))
+      .limit(1);
+
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      throw new UnauthorizedException('Invalid credentials!');
+    }
+
+    const token = this.jwtService.sign({ userId: user.id, email: user.email });
+
+    // Send a new message to kafka
+    this.kafkaClient.emit(KAFKA_TOPICS.USER_LOGIN, {
+      userId: user.id,
+      timestamp: new Date().toISOString(),
+    });
+    return {
+      access_token: token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    };
   }
 }
