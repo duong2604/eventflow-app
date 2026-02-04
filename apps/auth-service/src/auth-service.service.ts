@@ -88,4 +88,19 @@ export class AuthServiceService implements OnModuleInit {
       },
     };
   }
+
+  async getProfile(userId: string) {
+    const [user] = await this.dbService.db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    };
+  }
 }
