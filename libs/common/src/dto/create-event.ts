@@ -6,7 +6,6 @@ import {
   IsString,
   MaxLength,
   Min,
-  MinLength,
 } from 'class-validator';
 
 export class CreateEventDto {
@@ -29,7 +28,7 @@ export class CreateEventDto {
 
   @IsInt()
   @IsNotEmpty()
-  @MinLength(1, { message: 'Capacity must be at least 1' })
+  @Min(1, { message: 'Capacity must be at least 1' })
   capacity: number;
 
   @IsInt()

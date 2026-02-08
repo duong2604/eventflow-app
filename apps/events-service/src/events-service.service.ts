@@ -1,5 +1,5 @@
 import { CreateEventDto } from '@app/common/dto/create-event';
-import { UpdateEventDo } from '@app/common/dto/update_event';
+import { UpdateEventDto } from '@app/common/dto/update_event';
 import { DatabaseService, events } from '@app/database';
 import { KAFKA_SERVICE, KAFKA_TOPICS } from '@app/kafka';
 import {
@@ -45,10 +45,7 @@ export class EventsServiceService implements OnModuleInit {
   }
 
   async findAll() {
-    return await this.dbService.db
-      .select()
-      .from(events)
-      .where(eq(events.status, 'PUBLISHED'));
+    return await this.dbService.db.select().from(events);
   }
 
   async findOne(id: string) {
@@ -67,7 +64,7 @@ export class EventsServiceService implements OnModuleInit {
 
   async update(
     id: string,
-    eventUpdateDto: UpdateEventDo,
+    eventUpdateDto: UpdateEventDto,
     userId: string,
     userRole: string,
   ) {

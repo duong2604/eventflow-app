@@ -28,7 +28,7 @@ export class AuthService {
         .post<unknown>(`${this.authServiceUrl}/register`, data)
         .pipe(
           catchError((error: HttpErrorResponse) => {
-            this.handleHttpError(error, 'register');
+            this.handleHttpError(error, 'REGISTER');
           }),
         ),
     );
@@ -40,7 +40,7 @@ export class AuthService {
     const response = await firstValueFrom(
       this.httpService.post<unknown>(`${this.authServiceUrl}/login`, data).pipe(
         catchError((error: HttpErrorResponse) => {
-          this.handleHttpError(error, 'login');
+          this.handleHttpError(error, 'LOGIN');
         }),
       ),
     );
@@ -58,7 +58,7 @@ export class AuthService {
         })
         .pipe(
           catchError((error: HttpErrorResponse) => {
-            this.handleHttpError(error, 'getProfile');
+            this.handleHttpError(error, 'GET_PROFILE');
           }),
         ),
     );
