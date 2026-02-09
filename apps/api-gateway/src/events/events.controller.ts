@@ -10,9 +10,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { EventsService } from './events.service';
-import { CreateEventDto } from '@app/common/dto/create-event';
+import { CreateEventDto } from '@app/common/dto/create-event.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { UpdateEventDto } from '@app/common/dto/update_event';
+import { UpdateEventDto } from '@app/common/dto/update-event.dto';
 
 @Controller('events')
 export class EventsController {

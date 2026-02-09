@@ -1,5 +1,5 @@
-import { CreateEventDto } from '@app/common/dto/create-event';
-import { UpdateEventDto } from '@app/common/dto/update_event';
+import { CreateEventDto } from '@app/common/dto/create-event.dto';
+import { UpdateEventDto } from '@app/common/dto/update-event.dto';
 import {
   Body,
   Controller,
