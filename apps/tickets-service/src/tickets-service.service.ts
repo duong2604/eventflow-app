@@ -1,4 +1,4 @@
-import { PurchaseTicketDto } from '@app/common/dto';
+import { CheckInTicketDto, PurchaseTicketDto } from '@app/common/dto';
 import { DatabaseService, events, tickets } from '@app/database';
 import { KAFKA_SERVICE, KAFKA_TOPICS } from '@app/kafka';
 import {
@@ -86,7 +86,7 @@ export class TicketsServiceService implements OnModuleInit {
     });
   }
 
-  async findMyTicket(userId: string) {
+  async findMyTickets(userId: string) {
     const userTickets = await this.dbService.db
       .select()
       .from(tickets)
@@ -167,11 +167,12 @@ export class TicketsServiceService implements OnModuleInit {
     return { message: 'Ticket cancelled successfully!' };
   }
 
-  async checkIn(id: string, organizerId: string) {
+  async checkIn(organizerId: string, checkInTicketDto: CheckInTicketDto) {
+    const { ticketCode } = checkInTicketDto;
     const [ticket] = await this.dbService.db
       .select()
       .from(tickets)
-      .where(eq(tickets.id, id))
+      .where(eq(tickets.ticketCode, ticketCode))
       .limit(1);
 
     if (!ticket) {
@@ -201,7 +202,7 @@ export class TicketsServiceService implements OnModuleInit {
     const [checkedIn] = await this.dbService.db
       .update(tickets)
       .set({ status: 'CHECKED_IN', updatedAt: new Date() })
-      .where(eq(tickets.id, id))
+      .where(eq(tickets.ticketCode, ticketCode))
       .returning();
 
     this.kafkaClient.emit(KAFKA_TOPICS.TICKET_CHECKED_IN, {
