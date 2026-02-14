@@ -36,7 +36,7 @@ export class AuthServiceService implements OnModuleInit {
       .where(eq(users.email, email))
       .limit(1);
 
-    if (!existingUsing) {
+    if (existingUsing.length > 0) {
       throw new ConflictException('User already existed!');
     }
     // Hash password

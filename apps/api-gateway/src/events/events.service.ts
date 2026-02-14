@@ -45,6 +45,7 @@ export class EventsService {
           }),
         ),
     );
+
     return response.data;
   }
 
