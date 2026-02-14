@@ -70,7 +70,7 @@ export class EventsServiceService implements OnModuleInit {
   ) {
     const event = await this.findOne(id);
 
-    if (event.organizerId != userId || userRole != 'ADMIN') {
+    if (event.organizerId !== userId && userRole !== 'ADMIN') {
       throw new ForbiddenException(
         'You are not authorized to update this event!',
       );
@@ -100,7 +100,7 @@ export class EventsServiceService implements OnModuleInit {
   async publish(id: string, userId: string, userRole: string) {
     const event = await this.findOne(id);
 
-    if (event.organizerId != userId || userRole != 'ADMIN') {
+    if (event.organizerId !== userId && userRole !== 'ADMIN') {
       throw new ForbiddenException(
         'You are not authorized to publish this event!',
       );
@@ -120,7 +120,7 @@ export class EventsServiceService implements OnModuleInit {
   async cancel(id: string, userId: string, userRole: string) {
     const event = await this.findOne(id);
 
-    if (event.organizerId != userId || userRole != 'ADMIN') {
+    if (event.organizerId !== userId && userRole !== 'ADMIN') {
       throw new ForbiddenException(
         'You are not authorized to cancel this event!',
       );

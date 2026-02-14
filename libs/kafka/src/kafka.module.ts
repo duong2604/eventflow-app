@@ -5,6 +5,7 @@ import {
   KAFKA_CLIENT_ID,
   KAFKA_CONSUMER_GROUP,
 } from './constants/kafka.constant';
+import { KafkaAdminService } from './kafka.service';
 
 export const KAFKA_SERVICE = 'KAFKA_SERVICE';
 
@@ -22,6 +23,13 @@ export class KafkaModule {
               client: {
                 clientId: KAFKA_CLIENT_ID,
                 brokers: [KAFKA_BROKER],
+                retry: {
+                  initialRetryTime: 300,
+                  retries: 10,
+                },
+              },
+              producer: {
+                allowAutoTopicCreation: true,
               },
               consumer: {
                 groupId: consumerGroup ?? KAFKA_CONSUMER_GROUP,
@@ -30,7 +38,8 @@ export class KafkaModule {
           },
         ]),
       ],
-      exports: [ClientsModule],
+      providers: [KafkaAdminService],
+      exports: [ClientsModule, KafkaAdminService],
     };
   }
 }

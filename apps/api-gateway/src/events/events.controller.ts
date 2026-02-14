@@ -24,15 +24,15 @@ export class EventsController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.eventsService.findOne(id);
-  }
-
-  @UseGuards(AuthGuard('jwt'))
   @Get('my-event')
   findMyEvent(@Req() req: { user: { userId: string; role?: string } }) {
     return this.eventsService.findMyEvent(req.user.userId);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get(':id')
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.eventsService.findOne(id);
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -41,7 +41,11 @@ export class EventsController {
     @Body() createEventDto: CreateEventDto,
     @Req() req: { user: { userId: string; role?: string } },
   ) {
-    return this.eventsService.create(createEventDto, req.user.userId);
+    return this.eventsService.create(
+      createEventDto,
+      req.user.userId,
+      req.user.role || 'USER',
+    );
   }
 
   @UseGuards(AuthGuard('jwt'))

@@ -44,7 +44,7 @@ export class EventsServiceController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateEventDto: UpdateEventDto,
     @Headers('x-user-id') userId: string,
-    @Headers('x-user_role') userRole: string,
+    @Headers('x-user-role') userRole: string,
   ) {
     return this.eventsServiceService.update(
       id,

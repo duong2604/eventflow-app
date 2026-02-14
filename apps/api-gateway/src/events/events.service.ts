@@ -60,12 +60,17 @@ export class EventsService {
     return response.data;
   }
 
-  async create(data: object, userId: string): Promise<unknown> {
+  async create(
+    data: object,
+    userId: string,
+    userRole: string,
+  ): Promise<unknown> {
     const response = await firstValueFrom(
       this.httpService
         .post(`${this.eventServiceUrl}`, data, {
           headers: {
             'x-user-id': userId,
+            'x-user-role': userRole,
           },
         })
         .pipe(

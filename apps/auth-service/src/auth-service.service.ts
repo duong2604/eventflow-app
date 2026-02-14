@@ -71,7 +71,7 @@ export class AuthServiceService implements OnModuleInit {
       throw new UnauthorizedException('Invalid credentials!');
     }
 
-    const token = this.jwtService.sign({ userId: user.id, email: user.email });
+    const token = this.jwtService.sign({ userId: user.id, role: user.role });
 
     // Send a new message to kafka
     this.kafkaClient.emit(KAFKA_TOPICS.USER_LOGIN, {
