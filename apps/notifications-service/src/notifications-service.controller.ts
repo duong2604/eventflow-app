@@ -23,7 +23,7 @@ export class NotificationsServiceController {
     @Ctx() context: KafkaContext,
   ) {
     const topic = context.getTopic();
-    const message = JSON.stringify(context.getMessage());
+    const message = JSON.stringify(context.getMessage().value);
     this.logger.log(`[${topic}]: ${message}`);
 
     await this.notificationsService.sendWelcomeEmail(data);
@@ -43,7 +43,7 @@ export class NotificationsServiceController {
     @Ctx() context: KafkaContext,
   ) {
     const topic = context.getTopic();
-    const message = JSON.stringify(context.getMessage());
+    const message = JSON.stringify(context.getMessage().value);
     this.logger.log(`[${topic}]: ${message}`);
 
     await this.notificationsService.sendTicketPurchasedEmail(data);

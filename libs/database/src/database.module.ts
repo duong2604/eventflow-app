@@ -4,7 +4,12 @@ import { DatabaseService } from './database.service';
 
 @Global()
 @Module({
-  imports: [ConfigModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+  ],
   providers: [DatabaseService],
   exports: [DatabaseService],
 })
