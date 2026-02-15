@@ -106,7 +106,7 @@ export class TicketService {
     const response = await firstValueFrom(
       this.httpService
         .patch(
-          `${this.ticketServiceUrl}/${ticketId}`,
+          `${this.ticketServiceUrl}/${ticketId}/cancel`,
           {},
           {
             headers: {

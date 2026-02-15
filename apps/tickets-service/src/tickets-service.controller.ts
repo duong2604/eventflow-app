@@ -15,7 +15,7 @@ import { CheckInTicketDto, PurchaseTicketDto } from '@app/common/dto';
 export class TicketsServiceController {
   constructor(private readonly ticketsServiceService: TicketsServiceService) {}
 
-  @Post()
+  @Post('purchase')
   purchase(
     @Body() purchaseDto: PurchaseTicketDto,
     @Headers('x-user-id') userId: string,

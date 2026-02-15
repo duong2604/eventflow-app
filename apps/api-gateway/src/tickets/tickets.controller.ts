@@ -39,7 +39,7 @@ export class TicketsController {
     return this.ticketService.findOne(id, req.user.userId);
   }
 
-  @Patch(':id')
+  @Patch(':id/cancel')
   cancel(
     @Param('id', ParseUUIDPipe) id: string,
     @Req() req: { user: { userId: string } },
@@ -48,7 +48,7 @@ export class TicketsController {
   }
   @Get('event/:eventId')
   findEventTickets(
-    @Param(':eventId', ParseUUIDPipe) eventId: string,
+    @Param('eventId', ParseUUIDPipe) eventId: string,
     @Req() req: { user: { userId: string } },
   ) {
     return this.ticketService.findEventTickets(eventId, req.user.userId);

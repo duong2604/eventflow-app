@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { EventsModule } from './events/events.module';
+import { TicketsModule } from './tickets/tickets.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
@@ -20,6 +21,7 @@ import { ConfigModule } from '@nestjs/config';
     }),
     AuthModule,
     EventsModule,
+    TicketsModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtStrategy],
